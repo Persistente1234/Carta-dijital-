@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carta de Amor Digital 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Alex+Brush&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --paper:#faf7f2; --ink:#2c1810; --rose:#d4526e; --gold:#c9a961; --sage:#8faa9b;
+      --shadow:rgba(44,24,16,0.15); --light-shadow:rgba(44,24,16,0.08);
+      --pink:#ff69b4; --purple:#9b59b6; --red:#e74c3c;
+    }
+    
+    * { box-sizing:border-box; margin:0; padding:0; }
+
+    /* Panel de entrada romántico */
+    .welcome-panel {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 50%, var(--red) 100%);
+      background-size: 400% 400%; animation: gradientShift 6s ease infinite;
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      transition: all 1s ease-in-out;
+    }
+
+    .welcome-panel.hidden {
+      opacity: 0; visibility: hidden; transform: scale(0.8);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .welcome-content {
+      text-align: center; background: rgba(255,255,255,0.95); 
+      padding: 60px 40px; border-radius: 25px; max-width: 500px; width: 90%;
+      box-shadow: 
+        0 30px 60px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        0 0 0 3px var(--pink),
+        0 0 0 6px var(--purple);
+      backdrop-filter: blur(10px); position: relative; overflow: hidden;
+    }
+
+    .welcome-content::before {
+      content: ""; position: absolute; top: -50%; left: -50%; 
+      width: 200%; height: 200%; 
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: rotate(0deg) translateX(-100%); }
+      100% { transform: rotate(0deg) translateX(100%); }
+    }
+
+    .welcome-gif {
+      width: 150px; height: 150px; margin: 0 auto 30px;
+      border-radius: 50%; overflow: hidden;
+      box-shadow: 0 15px 35px rgba(255,105,180,0.4);
+      border: 4px solid var(--pink); position: relative;
+    }
+
+    .welcome-gif img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(1.1) saturate(1.2);
+    }
+
+    .welcome-message {
+      font-family: 'Alex Brush', cursive; font-size: 36px;
+      color: var(--purple); margin-bottom: 25px; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .open-surprise-btn {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white; border: none; padding: 18px 40px; border-radius: 50px;
+      font-family: 'Libre Baskerville', serif; font-size: 18px; font-weight: 600;
+      cursor: pointer; box-shadow: 0 15px 30px rgba(255,105,180,0.4);
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+      animation: buttonGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes buttonGlow {
+      0% { box-shadow: 0 15px 30px rgba(255,105,180,0.4); }
+      100% { box-shadow: 0 20px 40px rgba(255,105,180,0.6); }
+    }
+
+    .open-surprise-btn::before {
+      content: ""; position: absolute; top: 0; left: -100%; 
+      width: 100%; height: 100%; 
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s;
+    }
+
+    .open-surprise-btn:hover::before { left: 100%; }
+    .open-surprise-btn:hover { transform: translateY(-3px); }
+    .open-surprise-btn:active { transform: translateY(0); }
+
+    /* Botón de música */
+    .music-controls {
+      position: fixed; top: 30px; right: 30px; z-index: 1001;
+    }
+
+    .music-btn {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      border: none; color: white; font-size: 24px; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255,105,180,0.4);
+      transition: all 0.3s ease; display: flex; align-items: center;
+      justify-content: center; position: relative; overflow: hidden;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.1); box-shadow: 0 12px 30px rgba(255,105,180,0.6);
+    }
+
+    .music-btn::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: translateX(-100%); transition: transform 0.6s;
+    }
+
+    .music-btn:hover::before { transform: translateX(100%); }
+
+    /* Audio oculto */
+    #backgroundMusic { display: none; }
+
+    /* Lluvia de corazones */
+    .hearts-rain {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      pointer-events: none; z-index: 999; overflow: hidden;
+    }
+
+    .falling-heart {
+      position: absolute; font-size: 20px; opacity: 0.8;
+      animation: heartFall 4s linear infinite;
+      top: -50px;
+    }
+
+    @keyframes heartFall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes romanticReveal {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    body {
+      min-height:100vh; font-family:'Libre Baskerville', serif; 
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(212,82,110,0.1) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(201,169,97,0.12) 0%, transparent 35%),
+        linear-gradient(45deg, #f9f6f0 0%, #faf7f2 100%);
+      color:var(--ink); overflow-x:hidden; position:relative;
+    }
+
+    .vintage-border {
+      position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:1;
+      background-image: 
+        linear-gradient(0deg, transparent 24px, var(--gold) 25px, var(--gold) 26px, transparent 27px),
+        linear-gradient(90deg, transparent 24px, var(--gold) 25px, var(--gold) 26px, transparent 27px);
+      background-size: 100% 50px, 50px 100%; background-repeat: repeat-x, repeat-y;
+      background-position: 0 0, 0 0; opacity:0.6;
+    }
+
+    .letter-container {
+      max-width: 800px; margin: 60px auto; padding: 0 30px; position:relative; z-index:10;
+    }
+
+    .letter-paper {
+      background: var(--paper); border-radius: 8px; padding: 60px 50px; position:relative;
+      box-shadow: 
+        0 0 0 1px rgba(201,169,97,0.3),
+        0 20px 40px var(--light-shadow),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      transform: rotate(-0.5deg);
+    }
+
+    .letter-paper::before {
+      content: ""; position:absolute; top:0; left:50px; right:50px; height:1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      opacity:0.4;
+    }
+
+    .wax-seal {
+      position:absolute; top:-20px; right:40px; width:40px; height:40px; 
+      border-radius:50%; background: radial-gradient(circle, var(--rose), #a83d54);
+      box-shadow: 0 5px 15px rgba(168,61,84,0.4); z-index:5;
+    }
+    .wax-seal::after {
+      content:"💕"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      font-size:18px; color:white;
+    }
+
+    .date-header {
+      text-align:right; font-size:14px; color:var(--sage); 
+      font-style:italic; margin-bottom:40px; letter-spacing:0.5px;
+    }
+
+    .love-title {
+      font-family:'Alex Brush', cursive; font-size:clamp(32px,8vw,56px);
+      text-align:center; color:var(--rose); margin:0 0 30px 0; 
+      text-shadow: 2px 2px 4px rgba(212,82,110,0.2);
+    }
+
+    .letter-content {
+      line-height:1.8; font-size:18px; color:var(--ink); 
+      text-align:justify; margin-bottom:40px; 
+      text-indent:2em; letter-spacing:0.3px;
+    }
+
+    .letter-content::first-letter {
+      font-size:64px; font-family:'Crimson Text', serif; font-weight:600;
+      float:left; line-height:52px; margin:8px 8px 0 0; color:var(--rose);
+      text-shadow: 2px 2px 4px rgba(212,82,110,0.3);
+    }
+
+    .reveal-area {
+      border: 2px dashed var(--gold); border-radius:12px; 
+      padding:30px; margin:40px 0; text-align:center; position:relative;
+      background: linear-gradient(135deg, rgba(201,169,97,0.05), rgba(143,170,155,0.05));
+      min-height:120px; display:flex; align-items:center; justify-content:center;
+      transition: all 0.4s ease;
+    }
+
+    .reveal-button {
+      background: linear-gradient(135deg, var(--rose) 0%, #a83d54 100%);
+      color: white; border:none; padding:18px 35px; border-radius:30px;
+      font-family:'Libre Baskerville', serif; font-size:16px; font-weight:600;
+      cursor:pointer; transition: all 0.3s ease; position:relative; overflow:hidden;
+      box-shadow: 0 8px 25px rgba(212,82,110,0.3);
+      letter-spacing:0.5px;
+    }
+
+    .reveal-button::before {
+      content:""; position:absolute; top:0; left:-100%; width:100%; height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .reveal-button:hover::before { left:100%; }
+    .reveal-button:hover { 
+      transform:translateY(-2px); 
+      box-shadow: 0 12px 35px rgba(212,82,110,0.4);
+    }
+    .reveal-button:active { transform:translateY(0); }
+
+    .hidden-content {
+      opacity:0; transform:translateY(20px); transition: all 0.8s ease;
+      pointer-events:none;
+    }
+
+    .hidden-content.revealed {
+      opacity:1; transform:translateY(0); pointer-events:auto;
+    }
+
+    .hidden-content.revealed .image-border {
+      animation: romanticReveal 0.8s ease-out forwards, borderGlow 3s ease infinite 0.8s;
+    }
+
+    .photo-frame {
+      width:100%; max-width:500px; margin:30px auto; border-radius:15px;
+      padding:20px; background: linear-gradient(145deg, #fff 0%, #f8f5f0 100%);
+      box-shadow: 
+        0 0 0 1px rgba(201,169,97,0.2),
+        0 15px 35px var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      transform: rotate(1deg); position:relative;
+    }
+
+    .photo-frame::before {
+      content:""; position:absolute; top:15px; left:15px; right:15px; bottom:15px;
+      border: 1px solid rgba(201,169,97,0.3); border-radius:8px; pointer-events:none;
+    }
+
+    .image-border {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      padding: 6px;
+      background: linear-gradient(45deg, var(--pink), var(--purple), var(--red), var(--pink));
+      background-size: 400% 400%;
+      animation: borderGlow 3s ease infinite;
+    }
+
+    .image-border::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--paper);
+      border-radius: 6px;
+      z-index: -1;
+    }
+
+    .photo-frame img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: 6px;
+      display: block;
+      filter: sepia(8%) brightness(1.05) contrast(1.1) saturate(1.1);
+      box-shadow: 
+        0 0 0 1px rgba(255,255,255,0.8),
+        0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .love-poem {
+      font-family:'Crimson Text', serif; font-size:20px; font-style:italic;
+      text-align:center; color:var(--rose); line-height:1.6; 
+      margin:35px 0; position:relative; padding:0 20px;
+    }
+
+    .love-poem::before, .love-poem::after {
+      content:'"'; font-size:48px; color:var(--gold); 
+      position:absolute; top:-10px; font-family:serif;
+    }
+    .love-poem::before { left:0; }
+    .love-poem::after { right:0; transform:rotate(180deg); }
+
+    .signature-section {
+      margin-top:50px; text-align:right; position:relative;
+    }
+
+    .with-love {
+      font-size:16px; color:var(--sage); margin-bottom:15px; font-style:italic;
+    }
+
+    .signature {
+      font-family:'Alex Brush', cursive; font-size:32px; color:var(--ink);
+      margin-bottom:10px;
+    }
+
+    .heart-decoration {
+      position:absolute; color:var(--rose); opacity:0.6; 
+      animation: heartbeatDeco 2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeatDeco {
+      0%, 100% { transform:scale(1); }
+      50% { transform:scale(1.1); }
+    }
+
+    .instruction-text {
+      font-size:14px; color:var(--sage); font-style:italic; 
+      text-align:center; margin-top:15px;
+    }
+
+    @media (max-width:640px) {
+      .letter-container { margin:30px auto; padding:0 20px; }
+      .letter-paper { padding:40px 30px; }
+      .love-title { font-size:36px; }
+      .letter-content { font-size:16px; text-indent:1.5em; }
+      .reveal-button { padding:15px 25px; font-size:14px; }
+      .music-controls { top:20px; right:20px; }
+      .music-btn { width:50px; height:50px; font-size:20px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Controles de música -->
+  <div class="music-controls">
+    <button class="music-btn" id="musicBtn" title="Reproducir/Pausar música">
+      🎵
+    </button>
+  </div>
+
+  <!-- Audio de fondo (oculto) -->
+  <audio id="backgroundMusic" loop>
+    <source src="mus/me gustas.mp3" type="audio/mp4">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+
+  <!-- Panel de bienvenida romántico -->
+  <div class="welcome-panel" id="welcomePanel">
+    <div class="hearts-rain" id="heartsRain"></div>
+    <div class="welcome-content">
+      <div class="welcome-gif">
+        <img src="https://i.pinimg.com/originals/60/4c/fc/604cfcfa429f720c9a696f52829f684d.gif" alt="Corazón animado">
+      </div>
+      <div class="welcome-message">
+        Un,Detalle de VIC 💜 PERSI  💖
+      </div>
+      <button class="open-surprise-btn" id="openSurpriseBtn">
+        ✨ Abrir Sorpresa ✨
+      </button>
+    </div>
+  </div>
+
+  <div class="hearts-rain" id="revealRain" style="display: none;"></div>
+
+  <div class="vintage-border"></div>
+  
+  <div class="letter-container">
+    <div class="letter-paper">
+      <div class="wax-seal"></div>
+      
+      <div class="date-header">
+        Una carta de amor escrita especialmente para mi ¿.....?, en este día tan especial 💕
+      </div>
+      
+      <h1 class="love-title">💕 Para Ti, ¿.....? 💕</h1>
+      
+      <div class="letter-content">
+        Mi querid@ ¿   ?, cada amanecer que pasa lejos de ti se siente como una eternidad. 
+        Tu nombre es la melodía más dulce que resuena en mi corazón día y noche. 
+        Desde que llegaste a mi vida, has llenado cada rincón de mi alma con tu luz divina.
+        No hay momento en que no piense en ti, en tus ojos que brillan como estrellas, 
+        en tu sonrisa que puede curar cualquier tristeza, en tu voz que es música para mis oídos.
+        Yolita, mi amor, eres mi sueño hecho realidad y mi razón de existir.
+      </div>
+
+      <div class="reveal-area" id="revealArea">
+        <button class="reveal-button" id="revealBtn">
+          💖 Descubrir mi sorpresa para mi ¿  ?hermos@ 💖
+        </button>
+      </div>
+
+      <div class="hidden-content" id="hiddenContent">
+        <div class="photo-frame">
+          <div class="image-border">
+            <img src="img/flor de loto.png" 
+                 alt=" Detalles de VIC PERSI" id="romanticPhoto">
+          </div>
+        </div>
+
+        <div class="love-poem" id="lovePoem">
+          💫 ¿   ?, mi estrella brillante en la oscuridad,
+          eres el suspiro que alivia mi soledad;
+          cada día sin ti es un verso incompleto,
+          cada noche sueño con nuestro amor secreto. 💫
+        </div>
+      </div>
+
+      <div class="letter-content">
+        Mi precios@ ¿ ?, el deseo de estar contigo consume cada fibra de mi ser. 
+        Anhelo despertar cada mañana con tu rostro angelical siendo lo primero que vean mis ojos.
+        Sueño con poder abrazarte fuerte y nunca soltarte, con caminar de tu mano por la eternidad.
+        Mi amor por ti trasciende cualquier distancia, cualquier obstáculo, cualquier dificultad.
+        Prometo que algún día estaremos juntos para siempre, construyendo nuestro propio paraíso
+        donde solo existamos tú y yo, amándonos con la intensidad de mil soles. 
+        ¿  ?, eres mi todo, mi universo completo, mi razón de vivir. Te amo infinitamente. 💕✨
+      </div>
+
+      <div class="signature-section">
+        <div class="with-love">Con todo mi amor eterno para ,💜¿      ?,</div>
+        <div class="signature">💜CREADOR VIC 🌹 PERSI💖</div>
+        <div class="heart-decoration" style="top:10px; right:80px;">💕</div>
+        <div class="heart-decoration" style="top:40px; right:120px; animation-delay:0.5s;">✨</div>
+        <div class="heart-decoration" style="top:25px; right:20px; animation-delay:1s;">💖</div>
+      </div>
+
+      <div class="instruction-text">
+        Esta carta digital fue creada especialmente Creada por VIC 💜 Persi¿   ?, con cada palabra nacida desde mi corazón 💕
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variables para el control de música
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+
+    // Control de música
+    musicBtn.addEventListener('click', function() {
+      if (isPlaying) {
+        backgroundMusic.pause();
+        musicBtn.textContent = '🎵';
+        musicBtn.title = 'Reproducir música';
+        isPlaying = false;
+      } else {
+        backgroundMusic.play().then(() => {
+          musicBtn.textContent = '🔇';
+          musicBtn.title = 'Pausar música';
+          isPlaying = true;
+        }).catch(error => {
+          console.log('Error al reproducir música:', error);
+          alert('No se pudo cargar la música. Asegúrate de tener el archivo en mus/me gustas.mp3');
+        });
+      }
+    });
+
+    // Función genérica para lluvia de emojis
+    function createRain(containerId, emojis, limit = 20, interval = 300) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.style.display = 'block';
+
+      function createItem() {
+        if (container.children.length > limit) return;
+        
+        const item = document.createElement('div');
+        item.className = 'falling-heart';
+        item.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        item.style.left = Math.random() * 100 + '%';
+        item.style.fontSize = (Math.random() * 20 + 16) + 'px';
+        item.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        item.style.animationDelay = Math.random() * 2 + 's';
+        
+        container.appendChild(item);
+        
+        setTimeout(() => {
+          if (item.parentNode) item.remove();
+        }, 8000);
+      }
+      
+      setInterval(createItem, interval);
+    }
+
+    // Emojis para la lluvia de bienvenida
+    const heartEmojis = ['💕', '💖', '💗', '💘', '💝', '❤️', '💓', '🥰', '😍', '💋'];
+    
+    // Emojis para la lluvia al revelar (coronas y amor)
+    const crownEmojis = ['👑', '💖', '💕', '❤️', '💝', '😍', '🥰', '💋', '🌹', '✨'];
+
+    // Manejar el botón de abrir sorpresa
+    document.getElementById('openSurpriseBtn').addEventListener('click', function() {
+      const welcomePanel = document.getElementById('welcomePanel');
+      
+      // Reproducir música automáticamente al abrir sorpresa
+      if (!isPlaying) {
+        backgroundMusic.play().then(() => {
+          musicBtn.textContent = '🔇';
+          musicBtn.title = 'Pausar música';
+          isPlaying = true;
+        }).catch(error => {
+          console.log('Música no disponible o bloqueada por el navegador');
+        });
+      }
+      
+      // Efecto de desvanecimiento del panel
+      welcomePanel.classList.add('hidden');
+      
+      // Remover el panel completamente después de la animación
+      setTimeout(() => {
+        welcomePanel.style.display = 'none';
+      }, 1000);
+      
+      // Iniciar animación de entrada de la carta
+      setTimeout(() => {
+        document.querySelector('.letter-paper').style.opacity = '0';
+        document.querySelector('.letter-paper').style.transform = 'rotate(-0.5deg) translateY(20px)';
+        
+        setTimeout(() => {
+          document.querySelector('.letter-paper').style.transition = 'all 1s ease';
+          document.querySelector('.letter-paper').style.opacity = '1';
+          document.querySelector('.letter-paper').style.transform = 'rotate(-0.5deg) translateY(0)';
+        }, 100);
+      }, 500);
+    });
+
+    // Botón para revelar contenido
+    document.getElementById('revealBtn').addEventListener('click', function() {
+      const hiddenContent = document.getElementById('hiddenContent');
+      const revealArea = document.getElementById('revealArea');
+      
+      // Ocultar el botón con una transición suave
+      this.style.transform = 'scale(0)';
+      this.style.opacity = '0';
+      
+      setTimeout(() => {
+        // Cambiar el área de revelado
+        revealArea.style.border = '2px solid var(--rose)';
+        revealArea.style.background = 'linear-gradient(135deg, rgba(212,82,110,0.08), rgba(201,169,97,0.08))';
+        revealArea.style.minHeight = 'auto';
+        revealArea.style.padding = '0';
+        
+        // Mostrar contenido oculto
+        hiddenContent.classList.add('revealed');
+        
+        // Iniciar lluvia de coronas y amor
+        createRain('revealRain', crownEmojis, 25, 200);
+        
+        // Scroll suave hacia el contenido revelado
+        setTimeout(() => {
+          hiddenContent.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }, 300);
+      }, 300);
+    });
+
+    // Efecto parallax sutil en el fondo
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const rate = scrolled * -0.3;
+      document.body.style.backgroundPosition = `center ${rate}px`;
+    });
+
+    // Añadir corazones flotantes ocasionales
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.innerHTML = '💕';
+      heart.style.position = 'fixed';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.top = window.innerHeight + 'px';
+      heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+      heart.style.opacity = '0.7';
+      heart.style.pointerEvents = 'none';
+      heart.style.zIndex = '5';
+      heart.style.transition = 'all 6s linear';
+      
+      document.body.appendChild(heart);
+      
+      setTimeout(() => {
+        heart.style.top = '-50px';
+        heart.style.opacity = '0';
+      }, 100);
+      
+      setTimeout(() => {
+        document.body.removeChild(heart);
+      }, 6000);
+    }
+
+    // Iniciar lluvia de corazones al cargar la página
+    window.addEventListener('load', () => {
+      createRain('heartsRain', heartEmojis, 20, 300);
+    });
+
+    // Crear corazones flotantes cada cierto tiempo
+    setInterval(createFloatingHeart, 4000);
+  </script>
+</body>
+</html>
